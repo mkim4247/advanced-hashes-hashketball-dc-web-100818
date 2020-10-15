@@ -119,108 +119,79 @@ end
 def num_points_scored(player_name)
   points_scored = ""
   game_hash.each do |location, team_data|
-    team_data[:players].collect do |name, stats|
+    team_data[:players].each do |name, stats|
       if name == player_name
-      points_scored = stats[:points]
+        points_scored = stats[:points]
       end
     end
-  end 
+  end
   points_scored
-end 
+end
 
 def shoe_size(player_name)
-  shoe_sizing = ""
+  size = ''
   game_hash.each do |location, team_data|
-    team_data[:players].collect do |name, stats|
+    team_data[:players].each do |name, stats|
       if name == player_name
-        shoe_sizing = stats[:shoe]
-      end 
-    end 
-  end 
-  shoe_sizing
-end 
-
-def team_colors(team_name)
-  colors = [] 
-  game_hash.each do |location, team_data|
-    if team_name == game_hash[location][:team_name]
-      colors = game_hash[location][:colors]
-    end
-  end 
-  colors 
-end 
-
-def team_names
-  teams = [] 
-  game_hash.each do |location, team_data|
-    teams << game_hash[location][:team_name]
-  end 
-  teams 
-end 
-
-def player_numbers(team_name)
-  jersey_numbers = []
-  game_hash.each do |location, team_data|
-    if team_name == game_hash[location][:team_name]
-      game_hash[location][:players].each do |name, stats|
-        stats.each do |label, value|
-          if label == :number 
-            jersey_numbers << value 
-          end 
-        end 
-      end 
-    end
-  end 
-  jersey_numbers
-end 
-
-def player_stats(player_name)
-  stats_hash = {}
-  game_hash.each do |location, team_data|
-    team_data[:players].each do |name, stats|
-      if player_name == name 
-        stats_hash = stats 
-      end 
-    end 
-  end 
-  stats_hash
-end 
-
-def big_shoe_rebounds
-  player = ""
-  rebounds = ""
-  min_shoe = game_hash[:home][:players]["Alan Anderson"][:shoe]
-  game_hash.each do |location, team_data|
-    team_data[:players].each do |name, stats|
-      if stats[:shoe] > min_shoe
-        min_shoe = stats[:shoe]
-        player = name
+        size = stats[:shoe]
       end
     end
-  end 
-  
+  end
+  size
+end
+
+def team_colors(team)
+  colors = []
+  game_hash.each do |location, team_data|
+    if team_data[:team_name] == team
+      colors = team_data[:colors]
+    end
+  end
+  colors 
+end
+
+def team_names
+  teams = []
+  game_hash.each do |location, team_data|
+    teams << team_data[:team_name]
+  end
+  teams
+end
+
+def player_numbers(team)
+  numbers = []
+  game_hash.each do |location, team_data|
+    if team_data[:team_name] == team
+      team_data[:players].each do |attribute, stat|
+          numbers << stat[:number]
+      end
+    end
+  end
+  numbers
+end
+
+def player_stats(player)
+  p_stats = {} 
   game_hash.each do |location, team_data|
     team_data[:players].each do |name, stats|
       if name == player
+        p_stats = stats
+      end
+    end
+  end
+  p_stats
+end
+
+def big_shoe_rebounds
+  rebounds = 0
+  shoe = 0
+  game_hash.each do |location, team_data|
+    team_data[:players].each do |attribute, stats|
+      if stats[:shoe] == 0 || stats[:shoe] > shoe
+        shoe = stats[:shoe]
         rebounds = stats[:rebounds]
-      end 
-    end 
-  end 
-  rebounds 
-end 
-
-
-# game_hash
-#   {:home => {
-#     :team_name => "Brooklyn Nets", 
-#     :colors => ["Black", "White"], 
-#     :players => {"Alan Anderson" => {
-#       :number => 0,
-#       :shoe => 16, 
-#       :points => 22,
-#       :rebounds => 12, 
-#       :assists => 12,
-#       :steals => 3,
-#       :blocks => 1, 
-#       :slam_dunks => 1
-#       },
+      end
+    end
+  end
+  rebounds
+end
